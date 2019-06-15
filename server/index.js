@@ -2,6 +2,8 @@ const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
 
+const db = require('./db');
+
 const PORT = process.env.PORT || 8080;
 
 const app = express();
@@ -25,4 +27,7 @@ app.use((error, req, res, next) => {
 });
 
 // Start server listeng
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+db.sync()
+	.then(() => {
+		app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+	});
