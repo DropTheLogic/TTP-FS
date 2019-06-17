@@ -9,7 +9,10 @@ router.post('/signup', async (req, res, next) => {
 	try {
 		let { name, email, password } = req.body;
 		const user = await User.create({ name, email, password });
-		res.json(user);
+		req.login(user, err => {
+			if (err) next(err);
+			else res.json(user);
+		});
 	} catch (error) {
 		if (error.name === 'SequelizeUniqueConstraintError') {
 			res.status(401).send('User already exists!');
@@ -21,9 +24,36 @@ router.post('/signup', async (req, res, next) => {
 	}
 });
 
-router.post('/login');
-router.post('/logout');
-router.get('/me');
+router.post('/login', async (req, res, next) => {
+	try {
+		let { email, password } = req.body;
+		let user = await User.findOne({
+			where: { email, password }
+		});
+		if (user) {
+			req.login(user, err => {
+				if (err) next(err);
+				else res.json(user);
+			});
+		}
+		else {
+			res.status(401).send('Bad email or password!');
+		}
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
+router.post('/logout', (req, res) => {
+	req.logout();
+	req.session.destroy();
+	res.redirect('/');
+});
+
+router.get('/me', (req, res) => {
+	res.json(req.user);
+});
 
 /******************************
  * Stock and transaction routes
