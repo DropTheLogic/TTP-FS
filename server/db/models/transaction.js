@@ -6,6 +6,9 @@ const Transaction = db.define('transaction', {
 		type: Sequelize.INTEGER,
 		allowNull: false
 	},
+	symbol: {
+		type: Sequelize.STRING
+	},
 	buyPrice: {
 		type: Sequelize.INTEGER,
 		allowNull: false
