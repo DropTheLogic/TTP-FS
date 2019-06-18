@@ -19,9 +19,9 @@ export const getMe = () => async dispatch => {
 	}
 };
 
-export const signInThunk = ({ email, password }) => async dispatch => {
+export const authThunk = (userData, authType) => async dispatch => {
 	try {
-		const { data: user } = await axios.post(`/api/login`, { email, password });
+		const { data: user } = await axios.post(`/api/${authType}`, userData);
 		dispatch(getUser(user));
 		history.push('/');
 	} catch (error) {

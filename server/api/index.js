@@ -5,7 +5,7 @@ const { User, UserStock, Transaction } = require('../db/models');
  * Auth and user routes
  ******************************/
 
-router.post('/signup', async (req, res, next) => {
+router.post('/register', async (req, res, next) => {
 	try {
 		let { name, email, password } = req.body;
 		const user = await User.create({ name, email, password });
