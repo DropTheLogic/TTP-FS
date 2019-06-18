@@ -1,7 +1,9 @@
 import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
 import { Form, Button, Message, Icon, Item } from 'semantic-ui-react';
+import { signInThunk } from '../store/user';
 
-const Login = ({ authType, authError }) => {
+const Login = ({ authType, authError, handleSubmit }) => {
 	return (
 		<section id="auth">
 			<h2>{authType === 'register' ? 'Register' : 'Sign In' }</h2>
@@ -13,7 +15,7 @@ const Login = ({ authType, authError }) => {
 					header="Register Now for $5000!"
 					content="Sign up now for a one-time gift to grow your porfolio." />
 			}
-			<Form className="attached fluid segment">
+			<Form className="attached fluid segment" onSubmit={handleSubmit}>
 				{ authType === 'register' &&
 				<Fragment>
 					<Item>Already have an account? Log in here.</Item>
@@ -26,11 +28,11 @@ const Login = ({ authType, authError }) => {
 				}
 				<Form.Field>
 					<label>Email:</label>
-					<input placeholder="Email" />
+					<input name="email" placeholder="Email" />
 				</Form.Field>
 				<Form.Field>
 					<label>Password:</label>
-					<input placeholder="Password" type="password" />
+					<input name="password" placeholder="Password" type="password" />
 				</Form.Field>
 				<Button type="submit" color="green">
 					{ authType === 'register' ? 'Register' : 'Log In' }
@@ -47,4 +49,17 @@ const Login = ({ authType, authError }) => {
 	);
 };
 
-export default Login;
+const mapStateToProps = state => ({
+	authError: state.user.authError
+});
+
+const mapDispatchToProps = dispatch => ({
+	handleSubmit: (e) => {
+		e.preventDefault();
+		let email = e.target.email.value;
+		let password = e.target.password.value;
+		dispatch(signInThunk({email, password}));
+	}
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
