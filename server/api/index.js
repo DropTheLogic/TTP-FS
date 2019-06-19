@@ -60,13 +60,68 @@ router.get('/me', (req, res) => {
  ******************************/
 
 // Get logged-in user's portfolio items
-router.get('/portfolio', (req, res, next) => {
+router.get('/portfolio', async (req, res, next) => {
+	if (!req.user) {
+		res.status(403).json('No user logged in!');
+	}
+	else {
+		try {
+			let userId = req.user.id;
+			let portfolio = await UserStock.findAll({
+				where: { userId }
+			});
+			// Convert to object by symbol
+			portfolio = portfolio.reduce((obj, stock) => {
+				obj[stock.symbol] = stock;
+				return obj;
+			}, {});
 
+			res.send(portfolio);
+		} catch (error) {
+			console.error(error);
+			next(error);
+		}
+	}
 });
 
 // Make new transaction
-router.post('/transaction', (req, res, next) => {
+router.post('/transaction', async (req, res, next) => {
+	if (!req.user) {
+		res.status(403).json('No user logged in!');
+	}
+	else {
+		try {
+			let userId = req.user.id;
+			let { symbol, buyPrice, quantity } = req.body;
 
+			// Create Transaction
+			let transaction = await Transaction.create({
+				userId, symbol, buyPrice, quantity
+			});
+
+			// Update UserStock
+			let stock = await UserStock.findOne({
+				where: { userId, symbol }
+			});
+			if (stock) {
+				UserStock.update({ quantity: stock.quantity + (+quantity) },
+					{ where: { userId, symbol } });
+			}
+			else {
+				UserStock.create({ symbol, quantity, userId });
+			}
+
+			// Update User cash balance (in cents)
+			let user = await User.findByPk(userId);
+			User.update({ cashBalance: user.cashBalance - buyPrice },
+				{ where: { id: userId } });
+
+			res.send(transaction);
+		} catch (error) {
+			console.error(error);
+			next(error);
+		}
+	}
 });
 
 

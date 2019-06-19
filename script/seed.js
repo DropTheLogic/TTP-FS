@@ -1,7 +1,7 @@
 'use strict';
 
 const db = require('../server/db');
-const { User } = require('../server/db/models');
+const { User, UserStock } = require('../server/db/models');
 
 async function seed() {
 	await db.sync({ force: true });
@@ -12,7 +12,13 @@ async function seed() {
 		User.create({ name: 'Spot', email: 'spot@123.com', password: 'abc123' })
 	]);
 
+	const userStocks = await Promise.all([
+		UserStock.create({ userId: users[0].id, symbol: 'AAPL', quantity: 25 }),
+		UserStock.create({ userId: users[0].id, symbol: 'FB', quantity: 20 })
+	]);
+
 	console.log(`Seeded ${users.length} users.`);
+	console.log(`Seeded ${userStocks.length} user-stocks.`);
 	console.log(`Seeded successfully.`);
 }
 
@@ -26,6 +32,7 @@ async function runSeed() {
 		console.log('Closing connection to db.');
 		await db.close();
 		console.log('db connection closed. Have a great day!');
+		process.exit();
 	}
 }
 
