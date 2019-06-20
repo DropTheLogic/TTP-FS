@@ -5,9 +5,11 @@ const defaultUser = {};
 
 // Actions
 const GET_USER = 'GET_USER';
+const SET_BUY_ERROR = 'SET_BUY_ERROR';
 
 // Action Creators
 const getUser = user => ({ type: GET_USER, user });
+export const setBuyError = message => ({ type: SET_BUY_ERROR, message });
 
 // Thunks
 export const getMe = () => async dispatch => {
@@ -45,6 +47,8 @@ const user = (state = defaultUser, action) => {
 		case GET_USER: {
 			return action.user;
 		}
+		case SET_BUY_ERROR:
+			return { ...state, buyError: action.message };
 		default:
 			return state;
 	}

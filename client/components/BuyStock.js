@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Segment, Divider, Form, Button, Message, Icon } from 'semantic-ui-react';
 import { getOnePrice, getAllStocksThunk } from '../store/stocks';
-import { makeTransactionThunk, setBuyError } from '../store/transactions';
+import { setBuyError } from '../store/user';
+import { makeTransactionThunk } from '../store/transactions';
 
 const BuyStock = props => {
 	const { buyError, setError, user, submitBuyOrder } = props;
@@ -26,14 +27,14 @@ const BuyStock = props => {
 					`but ${quantity} shares of ${symbol} at $${stock.latestPrice}` +
 					`would cost $${(stock.latestPrice * quantity).toFixed(2)}`;
 				console.log(message);
-				// setError(message);
+				setError(message);
 			}
 		}
 		else {
 			// Validation error
 			let message = 'Bad stock symbol or quantity, please try again';
 			console.log(message);
-			// setError(message);
+			setError(message);
 		}
 	};
 	return (
@@ -59,7 +60,7 @@ const BuyStock = props => {
 				buyError &&
 				<Message attached="bottom" error>
 					<Icon name="x" />
-					{buyError.message}
+					{buyError}
 				</Message>
 			}
 		</Segment>
@@ -69,7 +70,7 @@ const BuyStock = props => {
 const mapStateToProps = state => ({
 	user: state.user,
 	stocks: state.stocks,
-	buyError: state.stocks.buyError
+	buyError: state.user.buyError
 });
 
 const mapDispatchToProps = dispatch => ({
