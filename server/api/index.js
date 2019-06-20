@@ -84,6 +84,25 @@ router.get('/portfolio', async (req, res, next) => {
 	}
 });
 
+// Get all of logged-in user's transactions
+router.get('/transactions', async (req, res, next) => {
+	if (!req.user) {
+		res.status(403).json('No user logged in!');
+	}
+	else {
+		try {
+			let userId = req.user.id;
+			let transactions = await Transaction.findAll({
+				where: { userId }
+			});
+			res.send(transactions);
+		} catch (error) {
+			console.error(error);
+			next(error);
+		}
+	}
+});
+
 // Make new transaction
 router.post('/transaction', async (req, res, next) => {
 	if (!req.user) {
