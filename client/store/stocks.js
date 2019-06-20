@@ -19,7 +19,7 @@ export const getAllStocksThunk = () => async dispatch => {
 		let { data: portfolio } = await axios.get('/api/portfolio');
 		let symbols = Object.keys(portfolio);
 
-		if (symbols.lenth > 0) {
+		if (symbols.length > 0) {
 			// Get prices for stocks
 			const baseUrl = `${iexBaseUrl}/stock/market/batch`;
 			const symbolArg = `symbols=${symbols.join(',')}`;
