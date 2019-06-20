@@ -39,7 +39,7 @@ const BuyStock = props => {
 	};
 	return (
 		<Segment padded>
-			<h2>Buy Stocks</h2>
+			<h3>Buy Stocks</h3>
 			<Divider />
 			<h4>Current Cash Balance: ${(balance / 100).toFixed(2)}</h4>
 

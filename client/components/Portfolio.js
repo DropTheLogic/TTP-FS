@@ -28,7 +28,7 @@ class Portfolio extends Component {
 						<Grid columns={2} relaxed stackable>
 							<Grid.Column>
 								<Segment padded>
-									<h2>Current Holdings</h2>
+									<h3>Current Holdings</h3>
 									<Divider />
 									<h4>Total Holdings Balance: ${balance}</h4>
 									{

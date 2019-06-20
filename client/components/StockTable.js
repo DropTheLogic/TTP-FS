@@ -3,7 +3,7 @@ import { Table, Icon } from 'semantic-ui-react';
 
 const StockTable = ({ stocks }) => {
 	return (
-		<div id="stock-table-container">
+		<div id="stock-table-container" className="table-scroll">
 			<Table selectable unstackable singleLine>
 				<Table.Header>
 					<Table.Row>

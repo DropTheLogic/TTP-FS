@@ -12,7 +12,7 @@ class Transactions extends Component {
 		return (
 			<section id="portfolio">
 				<h2>Transactions</h2>
-				<Segment>
+				<Segment className="table-scroll">
 					<Table selectable unstackable striped singleLine>
 						<Table.Header>
 							<Table.Row>

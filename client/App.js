@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import history from './history';
 import { Container } from 'semantic-ui-react';
 import { getMe } from './store/user';
 
@@ -22,17 +23,18 @@ class App extends Component {
 		return (
 			<Fragment>
 				<Header />
-				<Container>
+				{
+					this.props.isLoggedIn &&
+					<Nav pathname={history.location.pathname} />
+				}
+				<Container style={{marginTop: '10px'}}>
 				{
 					this.props.isLoggedIn ?
-					<Fragment>
-						<Nav />
-						<Switch>
-							<Route path="/portfolio" component={Portfolio} />
-							<Route path="/transactions" component={Transactions} />
-							<Route component={Portfolio} />
-						</Switch>
-					</Fragment>
+					<Switch>
+						<Route path="/portfolio" component={Portfolio} />
+						<Route path="/transactions" component={Transactions} />
+						<Redirect to="/portfolio" />
+					</Switch>
 				:
 					<Switch>
 						<Route path="/register" render={props => <Login {...props} authType="register" />} />
