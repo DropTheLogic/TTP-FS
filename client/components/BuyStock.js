@@ -12,7 +12,7 @@ const BuyStock = props => {
 	const validate = async (e) => {
 		e.preventDefault();
 		let symbol = e.target.symbol.value.toUpperCase();
-		let quantity = +e.target.quantity.value;
+		let quantity = parseInt(e.target.quantity.value, 10);
 		let stock = await getOnePrice(symbol);
 
 		if (stock && quantity > 0) {

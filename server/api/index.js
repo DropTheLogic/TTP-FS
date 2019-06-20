@@ -132,7 +132,7 @@ router.post('/transaction', async (req, res, next) => {
 
 			// Update User cash balance (in cents)
 			let user = await User.findByPk(userId);
-			User.update({ cashBalance: user.cashBalance - buyPrice },
+			User.update({ cashBalance: user.cashBalance - (buyPrice * quantity) },
 				{ where: { id: userId } });
 
 			res.send(transaction);
