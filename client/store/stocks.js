@@ -19,21 +19,26 @@ export const getAllStocksThunk = () => async dispatch => {
 		let { data: portfolio } = await axios.get('/api/portfolio');
 		let symbols = Object.keys(portfolio);
 
-		// Get prices for stocks
-		const baseUrl = `${iexBaseUrl}/stock/market/batch`;
-		const symbolArg = `symbols=${symbols.join(',')}`;
-		const types = 'types=quote';
-		const url = `${baseUrl}?${symbolArg}&${types}&${filter}&${token}`;
-		let { data: stocks } = await axios.get(url);
+		if (symbols.lenth > 0) {
+			// Get prices for stocks
+			const baseUrl = `${iexBaseUrl}/stock/market/batch`;
+			const symbolArg = `symbols=${symbols.join(',')}`;
+			const types = 'types=quote';
+			const url = `${baseUrl}?${symbolArg}&${types}&${filter}&${token}`;
+			let { data: stocks } = await axios.get(url);
 
-		// Transform API response shape
-		let stockSymbols = Object.keys(stocks);
-		let transformedStocks = stockSymbols.reduce((obj, symbol) => {
-			obj[symbol] = { ...stocks[symbol].quote, quantity: portfolio[symbol].quantity } ;
-			return obj;
-		}, {});
+			// Transform API response shape
+			let stockSymbols = Object.keys(stocks);
+			let transformedStocks = stockSymbols.reduce((obj, symbol) => {
+				obj[symbol] = { ...stocks[symbol].quote, quantity: portfolio[symbol].quantity } ;
+				return obj;
+			}, {});
 
-		dispatch(getAllStocks(transformedStocks));
+			dispatch(getAllStocks(transformedStocks));
+		}
+		else {
+			dispatch(getAllStocks({}));
+		}
 	} catch (error) {
 		console.error(error);
 	}
