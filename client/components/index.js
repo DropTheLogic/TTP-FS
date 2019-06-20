@@ -4,3 +4,4 @@ export { default as Login } from './Login';
 export { default as Portfolio } from './Portfolio';
 export { default as BuyStock } from './BuyStock';
 export { default as StockTable } from './StockTable';
+export { default as Transactions } from './Transactions';
